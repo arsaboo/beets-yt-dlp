@@ -201,7 +201,7 @@ class YdlPlugin(BeetsPlugin):
                 self.info = ie_result
                 self.process_item()
             else:
-                print("[ydl] No data for " + entry['id'])
+                print("[ydl] No data for " + (entry.get('id') or "N/A"))
 
     def is_in_library(self, entry, lib):
         """Check if an `entry` is already in the `lib` beets library
