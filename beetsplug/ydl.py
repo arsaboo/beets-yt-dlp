@@ -163,16 +163,18 @@ class YdlPlugin(BeetsPlugin):
             print("[ydl]")
             exit(1)
 
-        if 'entries' in ie_result:
-            entries = ie_result['entries']
-        else:
-            entries = [ie_result]
+        entries = [ie_result]
 
         download = self.config['download']
         if self.config['force_download']:
             download = True
 
         for entry in entries:
+            if 'entries' in entry:
+                print('[ydl] Processing list ' + entry['title'])
+                entries.extend(entry['entries'])
+                continue
+
             items = [x for x in lib.items('ydl:' + entry['id'])] + \
                 [x for x in lib.albums('ydl:' + entry['id'])]
 
@@ -187,6 +189,11 @@ class YdlPlugin(BeetsPlugin):
 
             data = y.process_ie_result(entry, download=download)
             if data:
+                if 'entries' in data:
+                    print('[ydl] Processing list ' + data['title'])
+                    entries.extend(data['entries'])
+                    continue
+                print("[ydl] Got data: " + str(data))
                 ie_result.update(data)
                 self.info = ie_result
                 self.process_item()
