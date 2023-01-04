@@ -171,7 +171,8 @@ class YdlPlugin(BeetsPlugin):
 
         for entry in entries:
             if 'entries' in entry:
-                print('[ydl] Processing list ' + entry['title'])
+                if 'title' in entry:
+                    print('[ydl] Processing list ' + entry['title'])
                 entries.extend(entry['entries'])
                 continue
 
@@ -190,7 +191,8 @@ class YdlPlugin(BeetsPlugin):
             data = y.process_ie_result(entry, download=download)
             if data:
                 if 'entries' in data:
-                    print('[ydl] Processing list ' + data['title'])
+                    if 'title' in data:
+                        print('[ydl] Processing list ' + data['title'])
                     entries.extend(data['entries'])
                     continue
                 print("[ydl] Got data: " + str(data))
