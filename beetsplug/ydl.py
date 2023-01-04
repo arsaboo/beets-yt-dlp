@@ -19,7 +19,7 @@ from optparse import OptionParser
 from pathlib import Path
 from shutil import copyfile
 from xdg import BaseDirectory
-from youtube_dl import YoutubeDL
+from yt_dlp import YoutubeDL
 from hashlib import md5
 import glob
 import json
@@ -73,8 +73,7 @@ class YdlPlugin(BeetsPlugin):
                 'format': 'bestaudio/best',
                 'postprocessors': [{
                     'key': 'FFmpegExtractAudio',
-                    'preferredcodec': 'mp3',
-                    'preferredquality': '192',
+                    'preferredcodec': 'best',
                     'nopostoverwrites': True
                 }]
             }

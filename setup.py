@@ -19,7 +19,7 @@ setuptools.setup(
     ],
     install_requires=[
         'beets',
-        'youtube-dl',
+        'yt-dlp',
         'pyxdg',
     ]
 )
