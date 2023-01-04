@@ -176,17 +176,18 @@ class YdlPlugin(BeetsPlugin):
                 entries.extend(entry['entries'])
                 continue
 
-            items = [x for x in lib.items('ydl:' + entry['id'])] + \
-                [x for x in lib.albums('ydl:' + entry['id'])]
+            if 'id' in entry:
+                items = [x for x in lib.items('ydl:' + entry['id'])] + \
+                    [x for x in lib.albums('ydl:' + entry['id'])]
 
-            if len(items) > 0 and not self.config['force_download']:
-                if self.config['verbose']:
-                    print('[ydl] Skipping item already in library:' + \
-                        ' %s [%s]' % (entry['title'], entry['id']))
-                continue
+                if len(items) > 0 and not self.config['force_download']:
+                    if self.config['verbose']:
+                        print('[ydl] Skipping item already in library:' + \
+                            ' %s [%s]' % (entry['title'], entry['id']))
+                    continue
 
-            if self.config['verbose'] and not download:
-                print("[ydl] Skipping download: " + entry['id'])
+                if self.config['verbose'] and not download:
+                    print("[ydl] Skipping download: " + entry['id'])
 
             data = y.process_ie_result(entry, download=download)
             if data:
