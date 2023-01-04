@@ -19,6 +19,7 @@ from optparse import OptionParser
 from pathlib import Path
 from shutil import copyfile
 from xdg import BaseDirectory
+import yt_dlp
 from yt_dlp import YoutubeDL
 from hashlib import md5
 import glob
@@ -189,7 +190,12 @@ class YdlPlugin(BeetsPlugin):
                 if self.config['verbose'] and not download:
                     print("[ydl] Skipping download: " + entry['id'])
 
-            data = y.process_ie_result(entry, download=download)
+            try:
+                data = y.process_ie_result(entry, download=download)
+            except yt_dlp.utils.DownloadError as e:
+                print('[ydl] Failed to download: ' + (entry.get('title') or entry.get('id') or 'N/A'))
+                print(e)
+                continue
             if data:
                 if 'entries' in data:
                     if 'title' in data:
