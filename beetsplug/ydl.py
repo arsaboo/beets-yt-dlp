@@ -51,8 +51,6 @@ class YdlPlugin(BeetsPlugin):
 
         self.search_query = "https://www.youtube.com/results?search_query="
         self.config_dir = config.config_dir()
-        self.cache_dir = self.config_dir + "/ydl-cache"
-        self.outtmpl = self.cache_dir + "/%(id)s/%(id)s.%(ext)s"
 
         # Default options
         self._config = {
@@ -61,8 +59,8 @@ class YdlPlugin(BeetsPlugin):
             'youtubedl_options': {
                 'verbose': False,
                 'keepvideo': False,
-                'cachedir': self.cache_dir,
-                'outtmpl': self.outtmpl,
+                'cachedir': self.config_dir + "/ydl-cache",
+                'outtmpl': self.config_dir + "/ydl-cache/%(id)s/%(id)s.%(ext)s",
                 'restrictfilenames': True,
                 'ignoreerrors': True,
                 'nooverwrites': True,
@@ -80,6 +78,9 @@ class YdlPlugin(BeetsPlugin):
         }
         self._config.update(self.config.get())
         self.config = self._config
+
+        self.cache_dir = self.config['youtubedl_options']['cachedir']
+        self.outtmpl = self.config['youtubedl_options']['outtmpl']
 
         # be verbose if beets is verbose
         if not self.config['verbose']:
@@ -214,9 +215,7 @@ class YdlPlugin(BeetsPlugin):
         """
         print('[ydl] Processing item: ' + self.info.get('title'))
 
-        ext = self.config['youtubedl_options']\
-                ['postprocessors'][0]['preferredcodec']
-        self.audio_file = self.get_file_path(ext)
+        self.audio_file = self.info['requested_downloads'][0]['filepath']
         self.outdir, self.audio_file_ext = os.path.splitext(self.audio_file)
         self.outdir = os.path.dirname(self.outdir)
 
