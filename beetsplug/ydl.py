@@ -78,11 +78,11 @@ class YdlPlugin(BeetsPlugin):
                 }]
             }
         }
-        self._config.update(self.config)
+        self._config.update(self.config.get())
         self.config = self._config
 
         # be verbose if beets is verbose
-        if not self.config.get('verbose'):
+        if not self.config['verbose']:
             self.config['verbose'] = True
 
     def commands(self):
@@ -98,10 +98,10 @@ class YdlPlugin(BeetsPlugin):
             if len(args) > 0:
                 for arg in args:
                     outer_class.youtubedl(lib, opts, arg)
-            elif self.config.get('urls') is not None:
-                if self.config.get('verbose'):
+            elif self.config['urls'] is not None:
+                if self.config['verbose']:
                     print("[ydl] Falling back to default urls")
-                for url in self.config.get('urls'):
+                for url in self.config['urls']:
                     outer_class.youtubedl(lib, opts, str(url))
 
         parser = OptionParser()
@@ -144,11 +144,11 @@ class YdlPlugin(BeetsPlugin):
         with an internal `YoutubeDL.process_ie_result` method, that will
         actually download the audio file.
         """
-        if self.config.get('verbose'):
+        if self.config['verbose']:
             print("[ydl] Calling youtube-dl")
 
-        youtubedl_config = self.config.get('youtubedl_options')
-        youtubedl_config['keepvideo'] = self.config.get('keep_files')
+        youtubedl_config = self.config['youtubedl_options']
+        youtubedl_config['keepvideo'] = self.config['keep_files']
         y = YoutubeDL(youtubedl_config)
 
         ie_result = y.extract_info(arg, download=False, process=False)
@@ -167,21 +167,21 @@ class YdlPlugin(BeetsPlugin):
         else:
             entries = [ie_result]
 
-        download = self.config.get('download')
-        if self.config.get('force_download'):
+        download = self.config['download']
+        if self.config['force_download']:
             download = True
 
         for entry in entries:
             items = [x for x in lib.items('ydl:' + entry['id'])] + \
                 [x for x in lib.albums('ydl:' + entry['id'])]
 
-            if len(items) > 0 and not self.config.get('force_download'):
-                if self.config.get('verbose'):
+            if len(items) > 0 and not self.config['force_download']:
+                if self.config['verbose']:
                     print('[ydl] Skipping item already in library:' + \
                         ' %s [%s]' % (entry['title'], entry['id']))
                 continue
 
-            if self.config.get('verbose') and not download:
+            if self.config['verbose'] and not download:
                 print("[ydl] Skipping download: " + entry['id'])
 
             data = y.process_ie_result(entry, download=download)
@@ -214,14 +214,14 @@ class YdlPlugin(BeetsPlugin):
         """
         print('[ydl] Processing item: ' + self.info.get('title'))
 
-        ext = self.config.get('youtubedl_options')\
+        ext = self.config['youtubedl_options']\
                 ['postprocessors'][0]['preferredcodec']
         self.audio_file = self.get_file_path(ext)
         self.outdir, self.audio_file_ext = os.path.splitext(self.audio_file)
         self.outdir = os.path.dirname(self.outdir)
 
-        if self.config.get('verbose') and \
-            self.config.get('download') and \
+        if self.config['verbose'] and \
+            self.config['download'] and \
             not os.path.exists(self.audio_file):
             print('[ydl] Error: Audio file not found: ' + self.audio_file)
             exit(1)
@@ -232,33 +232,33 @@ class YdlPlugin(BeetsPlugin):
         if not self.is_album():
             self.set_single_file_data()
 
-        if self.config.get('verbose'):
+        if self.config['verbose']:
             print(self.get_tracklist())
 
-        if self.config.get('write_dummy_mp3'):
+        if self.config['write_dummy_mp3']:
             self.write_dummy_mp3()
 
-        if self.config.get('verbose') and self.is_album():
+        if self.config['verbose'] and self.is_album():
             print("[ydl] URL is identified as an album")
         else:
             print("[ydl] URL is identified as a singleton")
 
-        if self.config.get('split_files') \
-            and not self.config.get('write_dummy_mp3') \
+        if self.config['split_files'] \
+            and not self.config['write_dummy_mp3'] \
             and self.is_album():
             self.split_file()
 
-        if self.config.get('import'):
+        if self.config['import']:
             beet_cmd = self.get_beet_cmd()
-            if self.config.get('verbose'):
+            if self.config['verbose']:
                 print("[ydl] Running beets: " + ' '.join(beet_cmd))
             subprocess.run(beet_cmd)
-        elif self.config.get('verbose'):
+        elif self.config['verbose']:
             print('[ydl] Skipping import')
 
-        if not self.config.get('keep_files'):
+        if not self.config['keep_files']:
             self.clean()
-        elif self.config.get('verbose') and self.config.get('keep_files'):
+        elif self.config['verbose'] and self.config['keep_files']:
             print('[ydl] Keeping downloaded files on ' + self.outdir)
 
     def get_beet_cmd(self):
@@ -267,7 +267,7 @@ class YdlPlugin(BeetsPlugin):
         if os.getenv('BEETS_ENV') == 'develop':
             beet_cmd.extend(['-c', 'env.config.yml'])
 
-        if self.config.get('verbose'):
+        if self.config['verbose']:
             beet_cmd.extend(['-v'])
 
         beet_cmd.extend(['import', '--set', 'ydl=' + self.info.get('id')])
@@ -283,11 +283,11 @@ class YdlPlugin(BeetsPlugin):
         return beet_cmd
 
     def __exit__(self, exc_type, exc_value, traceback):
-        cache_size = self.config.get('cache_dir')
+        cache_size = self.config['cache_dir']
         if cache_size > 0:
             print("[ydl] " + cache_size + " in cache")
 
-        if self.config.get('verbose'):
+        if self.config['verbose']:
             print('[ydl] Leaving')
 
     def clean(self):
@@ -319,7 +319,7 @@ class YdlPlugin(BeetsPlugin):
         """
         # @TODO check for overwrites according to options
 
-        if self.config.get('verbose'):
+        if self.config['verbose']:
             print("[ydl] Splitting tracks")
 
         cmds = []
@@ -430,11 +430,11 @@ class YdlPlugin(BeetsPlugin):
         self.tracks = []
         if os.path.exists(self.audio_file):
             self.tracks = self.extract_tracks_from_chapters()
-        elif self.config.get('verbose'):
+        elif self.config['verbose']:
             print("[ydl] Audio file not found, won't look for chapters")
 
         if len(self.tracks) == 0:
-            if self.config.get('verbose'):
+            if self.config['verbose']:
                 print("[ydl] Chapters not found, trying video description")
             self.tracks = self.extract_tracktimes_from_string(
                 self.info.get('description'))

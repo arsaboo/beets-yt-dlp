@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="beets-ydl",
+    name="beets-yt-dlp",
     version="0.0.4",
     author="Vinicius Massuchetto",
     description="Download audio from youtube-dl soures and import into beets",
