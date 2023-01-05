@@ -202,7 +202,6 @@ class YdlPlugin(BeetsPlugin):
                         print('[ydl] Processing list ' + data['title'])
                     entries.extend(data['entries'])
                     continue
-                print("[ydl] Got data: " + str(data))
                 ie_result.update(data)
                 self.info = ie_result
                 self.process_item()
