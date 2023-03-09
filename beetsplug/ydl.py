@@ -230,6 +230,8 @@ class YdlPlugin(BeetsPlugin):
         """
         print('[ydl] Processing item: ' + self.info.get('title'))
 
+        if 'requested_downloads' not in self.info:
+            return
         self.audio_file = self.info['requested_downloads'][0]['filepath']
         self.outdir, self.audio_file_ext = os.path.splitext(self.audio_file)
         self.outdir = os.path.dirname(self.outdir)
