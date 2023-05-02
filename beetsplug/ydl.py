@@ -312,7 +312,7 @@ class YdlPlugin(BeetsPlugin):
     def clean(self):
         """Deletes everything related to the present run.
         """
-        print('self.outdir: ' + self.outdir')
+        print('self.outdir: ' + self.outdir)
         files = glob.glob(self.outdir + '*')
         # for f in files:
         #     if os.path.isdir(f):
