@@ -314,8 +314,9 @@ class YdlPlugin(BeetsPlugin):
         """
         print('self.outdir: ' + self.outdir)
         files = glob.glob(self.outdir + '*')
-        # for f in files:
-        #     if os.path.isdir(f):
+        for f in files:
+            if not os.path.isdir(f):
+                print('Removing file: ' + f)
         #         shutil.rmtree(f)
         #     else:
         #         os.remove(f)
