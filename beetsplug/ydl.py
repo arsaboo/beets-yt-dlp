@@ -76,6 +76,7 @@ class YdlPlugin(BeetsPlugin):
                     'preferredcodec': 'best',
                     'nopostoverwrites': True,
                     'audio-format': 'mp3',
+                    'add-metadata': True,
                 }]
             }
         }
