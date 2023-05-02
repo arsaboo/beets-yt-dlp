@@ -74,7 +74,8 @@ class YdlPlugin(BeetsPlugin):
                 'postprocessors': [{
                     'key': 'FFmpegExtractAudio',
                     'preferredcodec': 'best',
-                    'nopostoverwrites': True
+                    'nopostoverwrites': True,
+                    'audio-format': 'mp3',
                 }]
             }
         }
