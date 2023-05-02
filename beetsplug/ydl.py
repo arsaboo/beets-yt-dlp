@@ -196,7 +196,8 @@ class YdlPlugin(BeetsPlugin):
             try:
                 data = y.process_ie_result(entry, download=download)
             except yt_dlp.utils.DownloadError as e:
-                print('[ydl] Failed to download: ' + (entry.get('title') or entry.get('id') or 'N/A'))
+                print('[ydl] Failed to download: ' +
+                    (entry.get('title') or entry.get('id') or 'N/A'))
                 print(e)
                 continue
             if data:
@@ -298,7 +299,7 @@ class YdlPlugin(BeetsPlugin):
             beet_cmd.extend([self.outdir])
         else:
             beet_cmd.extend([self.audio_file])
-
+        print(f"beet_cmd: {beet_cmd}")
         return beet_cmd
 
     def __exit__(self, exc_type, exc_value, traceback):
