@@ -5,12 +5,10 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="beets-yt-dlp",
-    version="0.0.4",
-    author="Vinicius Massuchetto",
     description="Download audio from youtube-dl soures and import into beets",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/vmassuchetto/beets-ydl",
+    url="https://github.com/arsaboo/beets-yt-dlp",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3.6",

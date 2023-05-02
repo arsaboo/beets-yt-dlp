@@ -12,16 +12,6 @@
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
 
-from beets import config
-from beets import ui
-from beets.plugins import BeetsPlugin
-from optparse import OptionParser
-from pathlib import Path
-from shutil import copyfile
-from xdg import BaseDirectory
-import yt_dlp
-from yt_dlp import YoutubeDL
-from hashlib import md5
 import glob
 import json
 import os
@@ -29,6 +19,17 @@ import re
 import shutil
 import subprocess
 import uuid
+from hashlib import md5
+from optparse import OptionParser
+from pathlib import Path
+from shutil import copyfile
+
+import yt_dlp
+from beets import config, ui
+from beets.plugins import BeetsPlugin
+from xdg import BaseDirectory
+from yt_dlp import YoutubeDL
+
 
 class Colors():
     INFO = '\033[94m'
@@ -81,7 +82,9 @@ class YdlPlugin(BeetsPlugin):
         self.config = self._config
 
         self.cache_dir = self.config['youtubedl_options']['cachedir']
+        print(self.cache_dir)
         self.outtmpl = self.config['youtubedl_options']['outtmpl']
+        print(self.outtmpl)
 
         # be verbose if beets is verbose
         if not self.config['verbose']:
@@ -309,12 +312,13 @@ class YdlPlugin(BeetsPlugin):
     def clean(self):
         """Deletes everything related to the present run.
         """
+        print('self.outdir: ' + self.outdir')
         files = glob.glob(self.outdir + '*')
-        for f in files:
-            if os.path.isdir(f):
-                shutil.rmtree(f)
-            else:
-                os.remove(f)
+        # for f in files:
+        #     if os.path.isdir(f):
+        #         shutil.rmtree(f)
+        #     else:
+        #         os.remove(f)
 
     def strip_fullalbum(self):
         """Will remove '[Full Album]' entries on video title.
